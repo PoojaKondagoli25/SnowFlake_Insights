@@ -1,1 +1,1 @@
-# SnowFlake_Insights-
+# SnowFlake_Insights
