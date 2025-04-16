@@ -37,3 +37,11 @@ SELECT FILE_NAME:{FIRST_COLUMN_NAME}::{DATA_TYPE} as {FIRST_COLUMN_NAME},
  --To select previous record from array use prev_{column_name}
 
 SELECT FILE_NAME:prev_{COLUMN_NAME}[1] as {COLUMN_NAME} FROM {DATABASE_NAME}.{SCHEMA_NAME}.{TABLE_NAME};
+
+--to select particular object from an array
+SELECT FILE_NAME:{COLUMN_NAME}[0] as {COLUMN_NAME},
+       FILE_NAME:{COLUMN_NAME}[1] as {COLUMN_NAME} 
+       FILE_NAME:{COLUMN_NAME}[2] as {COLUMN_NAME}
+ FROM {DATABASE_NAME}.{SCHEMA_NAME}.{TABLE_NAME};
+
+
