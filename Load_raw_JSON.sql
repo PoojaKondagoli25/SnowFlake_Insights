@@ -1,0 +1,39 @@
+--first create stage
+CREATE OR REPLACE STAGE {DATABASE_NAME}.{SCHEMA_NAME}.{STAGE_NAME}
+    url='(give the url)';
+
+--create file format with type: JSON
+CREATE OR REPLACE file format {DATABASE_NAME}.{SCHEMA_NAME}.{FORMAT_NAME}
+    TYPE = JSON;
+    
+--create table
+CREATE OR REPLACE table {DATABASE_NAME}.{SCHEMA_NAME}.{TABLE_NAME} (
+    raw_file variant);
+
+--load data
+COPY INTO {DATABASE_NAME}.{SCHEMA_NAME}.{TABLE_NAME}
+    FROM @{DATABASE_NAME}.{SCHEMA_NAME}.{STAGE_NAME}
+    file_format= {DATABASE_NAME}.{SCHEMA_NAME}.{FORMAT_NAME}
+    files = ('FILE_NAME.json');
+
+SELECT * FROM {DATABASE_NAME}.{SCHEMA_NAME}.{TABLE_NAME};
+
+--Selecting columns from JSON file
+
+SELECT {FILE_NAME}:{COLUMN_NAME} FROM {DATABASE_NAME}.{SCHEMA_NAME}.{TABLE_NAME};
+
+SELECT $1:{COLUMN_NAME} FROM {DATABASE_NAME}.{SCHEMA_NAME}.{TABLE_NAME};
+
+--to change column data type like string, int
+SELECT {FILE_NAME}:{COLUMN_NAME}::{DATA_TYPE} as {COLUMN_NAME} FROM {DATABASE_NAME}.{SCHEMA_NAME}.{TABLE_NAME};
+
+--to change all columns data type
+SELECT FILE_NAME:{FIRST_COLUMN_NAME}::{DATA_TYPE} as {FIRST_COLUMN_NAME},
+       FILE_NAME:{SECOND_COLUMN_NAME}::{DATA_TYPE} as {SECOND_COLUMN_NAME},
+       FILE_NAME:{THIRD_COLUMN_NAME}::{DATA_TYPE} as {THIRD_COLUMN_NAME}
+ FROM {DATABASE_NAME}.{SCHEMA_NAME}.{TABLE_NAME};
+
+ --Handling arrays
+ --To select previous record from array use prev_{column_name}
+
+SELECT FILE_NAME:prev_{COLUMN_NAME}[1] as {COLUMN_NAME} FROM {DATABASE_NAME}.{SCHEMA_NAME}.{TABLE_NAME};
