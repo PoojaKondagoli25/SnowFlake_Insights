@@ -18,8 +18,9 @@ SnowFlake Cortex data diff agent uses a custom Snowflake stored procedure (SP_DA
 3. Procedure returns a concise JSON summary plus detailed mismatch entries for downstream reporting or automatic remediation.
 
 ## Example usage
+```
 CALL SP_DATA_DIFF_JSON('<source_db>.<schema>.<table>', '<target_db>.<schema>.<table>', '<primary_key_columns>');
-
+```
 (Adjust procedure signature to your deployment — this is a representative example.)
 
 ## Output format (summary)
