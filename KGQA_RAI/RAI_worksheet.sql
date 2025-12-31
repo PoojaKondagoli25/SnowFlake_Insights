@@ -1,0 +1,49 @@
+--create db and schema where notebook will be created
+CREATE DATABASE RAI_DB;
+CREATE SCHEMA RAI_DB.RAI_SCHEME;
+
+--create snowspark services compute containor pool for notebook kernal and python runtime
+CREATE COMPUTE POOL RAI_COMPUTE_POOL
+MIN_NODES=1
+MAX_NODES=1
+INSTANCE_FAMILY=CPU_X64_XS;
+
+--create virtual wareshouse to run sql queries
+CREATE WAREHOUSE RAI_WAREHOUSE WITH WAREHOUSE_SIZE='XSMALL';
+
+--create new role to use RAI
+CREATE ROLE RAI_USER;
+
+--grant all the privalages which accountadmin has to new role
+GRANT USAGE ON DATABASE RAI_DB TO ROLE RAI_USER;
+GRANT USAGE ON SCHEMA RAI_SCHEME TO ROLE RAI_USER;
+GRANT CREATE NOTEBOOK ON SCHEMA RAI_DB.RAI_SCHEME TO ROLE RAI_USER;
+GRANT CREATE SERVICE ON SCHEMA RAI_DB.RAI_SCHEME TO ROLE RAI_USER;
+
+--grant usage privilages on the notebook compute pool and query warehouses
+GRANT USAGE ON COMPUTE POOL RAI_COMPUTE_POOL TO ROLE RAI_USER;
+GRANT USAGE ON WAREHOUSE RAI_WAREHOUSE TO ROLE RAI_USER;
+
+
+--create external access integration
+CREATE EXTERNAL ACCESS INTEGRATION PYPI_ACCESS_INTEGRATION
+ENABLED = TRUE
+ALLOWED_NETWORK_RULES = (PYPI_NETWORK_RULE)
+ALLOWED_AUTHENTICATION_SECRETS = ();
+
+SELECT top 10 * from sample_social_media_conversations_on_2025_movie_trailers."portal_master".movie_trailers_view;
+
+CREATE TABLE DEV_DB.DBT_LEARNING.MOVIES
+AS 
+(SELECT * FROM SAMPLE_SOCIAL_MEDIA_CONVERSATIONS_ON_2025_MOVIE_TRAILERS."portal_master".movie_trailers_view);
+
+SELECT * FROM DEV_DB.DBT_LEARNING.MOVIES
+LIMIT 20;
+
+CREATE VIEW DEV_DB.DBT_LEARNING.MOVIE_VIEWS
+AS 
+(SELECT * FROM SAMPLE_SOCIAL_MEDIA_CONVERSATIONS_ON_2025_MOVIE_TRAILERS."portal_master".movie_trailers_view);
+
+
+
+
